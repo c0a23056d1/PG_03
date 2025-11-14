@@ -1,0 +1,8 @@
+{
+  "name": "blockchain-layer",
+  "version": "1.0.0",
+  "devDependencies": {
+    "hardhat": "^2.27.0",
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0"
+  }
+}
