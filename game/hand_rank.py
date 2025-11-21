@@ -5,6 +5,22 @@ rank_order = {
     '10': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14
 }
 
+hand_names = {
+    9: "ロイヤルフラッシュ",
+    8: "ストレートフラッシュ",
+    7: "フォーカード",
+    6: "フルハウス",
+    5: "フラッシュ",
+    4: "ストレート",
+    3: "スリーカード",
+    2: "ツーペア",
+    1: "ワンペア",
+    0: "ハイカード"
+}
+
+def get_hand_name(rank):
+    return hand_names.get(rank, "不明")
+
 def card_rank(card):
     return rank_order[card[:-1]]  # "A♠" → "A"
 
