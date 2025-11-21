@@ -1,5 +1,6 @@
 from deck import Deck
 from player import Player
+from hand_rank import evaluate_5cards
 
 class PokerGame:
     def __init__(self, player_data):
@@ -40,9 +41,9 @@ class PokerGame:
             if not player.in_game:
                 continue
 
-            best = max(player.hand, key=self.evaluate_card)
-            best_score = self.evaluate_card(best)
-            scores.append((player.name, best_score))
+            cards = player.hand + ["2♠", "5♦", "9♥"]
+            score = evaluate_5cards(cards)
+            scores.append((player.name, score))
 
         winner = max(scores, key=lambda x: x[1])
         return winner
