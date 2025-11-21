@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>サーバーテスト画面</title>
+</head>
+<body>
+  <h1>サーバー疎通テスト</h1>
+
+  <button id="btn">サーバーへ接続</button>
+
+  <pre id="result" style="margin-top:20px; font-size:16px;"></pre>
+
+  <script>
+    document.getElementById("btn").addEventListener("click", async () => {
+      try {
+        const res = await fetch("http://localhost:3001/api/test");
+        const data = await res.json();
+        document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById("result").textContent = "接続に失敗しました: " + err;
+      }
+    });
+  </script>
+</body>
+</html>
