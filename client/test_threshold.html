@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>しきい値テスト</title>
+</head>
+<body>
+  <h1>しきい値テストページ</h1>
+
+  <label>
+    数値を入力:
+    <input id="inputValue" type="number" />
+  </label>
+  <button onclick="send()">送信</button>
+
+  <h2>サーバーからの返答:</h2>
+  <pre id="result"></pre>
+
+  <script>
+    async function send() {
+      const value = Number(document.getElementById("inputValue").value);
+
+      const res = await fetch("http://localhost:3001/api/threshold", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value })
+      });
+
+      const data = await res.json();
+      document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
