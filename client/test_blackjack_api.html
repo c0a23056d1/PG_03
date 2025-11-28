@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ブラックジャック API テスト</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 320px;
+    }
+    input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      background: #2ecc71;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>♠ ブラックジャック API テスト</h2>
+
+    <label>プレイヤー合計</label>
+    <input id="playerTotal" type="number" value="18">
+
+    <label>ディーラー合計</label>
+    <input id="dealerTotal" type="number" value="20">
+
+    <label>賭け金</label>
+    <input id="bet" type="number" value="50">
+
+    <label>所持金</label>
+    <input id="balance" type="number" value="1000">
+
+    <button onclick="send()">APIに送信</button>
+
+    <pre id="result">ここに結果が表示されます</pre>
+  </div>
+
+  <script>
+    async function send() {
+      const playerTotal = Number(document.getElementById("playerTotal").value);
+      const dealerTotal = Number(document.getElementById("dealerTotal").value);
+      const bet = Number(document.getElementById("bet").value);
+      const balance = Number(document.getElementById("balance").value);
+
+      const data = {
+        playerTotal,
+        dealerTotal,
+        bet,
+        balance
+      };
+
+      try {
+        const res = await fetch("http://localhost:3001/api/blackjack/result", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        const json = await res.json();
+        document.getElementById("result").textContent =
+          JSON.stringify(json, null, 2);
+
+      } catch (err) {
+        document.getElementById("result").textContent =
+          "エラー: サーバーに接続できません";
+      }
+    }
+  </script>
+
+</body>
+</html>
