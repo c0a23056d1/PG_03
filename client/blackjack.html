@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ブラックジャック（API連携版）</title>
+  <link rel="stylesheet" href="blackjack.css">
+</head>
+<body>
+  <div class="box">
+    <h2>♠ ブラックジャック</h2>
+    <div class="money">
+      所持金: <span id="balance">1000</span>　ベット: 
+      <input id="bet" type="number" value="50" min="1" style="width:60px;">
+    </div>
+    <div>
+      <span class="label">ディーラーの手札</span>
+      <div class="cards" id="dealerCards"></div>
+      <span>合計: <span id="dealerTotal">?</span></span>
+      <span class="label">あなたの手札</span>
+      <div class="cards" id="playerCards"></div>
+      <span>合計: <span id="playerTotal">?</span></span>
+    </div>
+    <button id="hitBtn" onclick="playerHit()">カードを引く（Hit）</button>
+    <button id="standBtn" onclick="playerStand()">スタンド（Stand）</button>
+    <button id="restartBtn" onclick="startGame()" style="display:none;">もう一度</button>
+    <button id="resetBtn" onclick="resetGame()" style="display:none;">再スタート（1000円から）</button>
+    <div id="judge" class="result-msg"></div>
+    <div id="gameover" class="gameover-msg"></div>
+    <pre id="apiResult" style="display:none;"></pre>
+  </div>
+  <script src="blackjack.js"></script>
+</body>
+</html>
