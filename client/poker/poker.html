@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ポーカー</title>
+  <link rel="stylesheet" href="poker.css">
+</head>
+<body>
+  <div class="box">
+    <h2>♠ ポーカー</h2>
+    <div class="money">
+      所持金: <span id="balance">1000</span>　
+      ポット: <span id="pot">0</span>
+      <br>
+      ベット: <input id="bet" type="number" value="100" min="1" style="width:60px;">
+    </div>
+    <div class="card-select-area">
+      <div>
+        <label>あなたの手札</label>
+        <div id="playerCards" class="cards"></div>
+      </div>
+      <div>
+        <label>相手の手札</label>
+        <div id="opponentCards" class="cards"></div>
+      </div>
+      <div>
+        <label>ボードカード</label>
+        <div id="boardCards" class="cards"></div>
+      </div>
+    </div>
+    <div class="action-btns">
+      <button id="dealBtn">配る</button>
+      <button id="betBtn">ベット</button>
+      <button id="callBtn">コール</button>
+      <button id="raiseBtn">レイズ</button>
+      <button id="checkBtn">チェック</button>
+      <button id="foldBtn">フォールド</button>
+      <button id="nextBtn">次へ</button>
+    </div>
+    <div id="stage" class="stage-msg"></div>
+    <div id="judge" class="result-msg"></div>
+    <div id="gameover" class="gameover-msg"></div>
+  </div>
+  <script src="poker.js"></script>
+</body>
+</html>

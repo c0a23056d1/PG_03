@@ -1,0 +1,154 @@
+body {
+  font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+  background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  background: rgba(255,255,255,0.97);
+  padding: 32px 36px 36px 36px;
+  border-radius: 18px;
+  width: 440px;
+  box-shadow: 0 8px 32px #0003, 0 1.5px 0 #2ecc71 inset;
+  margin: 40px 0;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 2px;
+  color: #185a9d;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.money {
+  font-size: 17px;
+  margin-bottom: 12px;
+  text-align: right;
+  color: #185a9d;
+}
+.money span {
+  font-weight: bold;
+  color: #27ae60;
+}
+input[type="number"] {
+  width: 70px;
+  margin-left: 8px;
+  padding: 7px 8px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1.5px solid #b2bec3;
+  background: #f8fafd;
+  color: #222;
+  transition: border 0.2s;
+}
+input[type="number"]:focus {
+  border: 1.5px solid #2ecc71;
+  outline: none;
+}
+
+.card-select-area {
+  margin-bottom: 16px;
+}
+.card-select-area label {
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 2px;
+  display: block;
+  color: #185a9d;
+  letter-spacing: 1px;
+}
+
+.cards {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  min-height: 58px;
+}
+.card {
+  background: linear-gradient(135deg, #f8fafc 60%, #e0eafc 100%);
+  border: 2px solid #b2bec3;
+  border-radius: 8px;
+  width: 44px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: #222;
+  box-shadow: 1px 2px 6px #0001;
+}
+.card.heart, .card.diamond { color: #e74c3c; }
+
+.action-btns {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+button {
+  flex: 1;
+  padding: 12px;
+  font-size: 17px;
+  background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px #185a9d22;
+  transition: background 0.2s, box-shadow 0.2s;
+  min-width: 90px;
+}
+button:disabled {
+  background: #b2bec3;
+  cursor: not-allowed;
+  color: #fff;
+  box-shadow: none;
+}
+
+.stage-msg {
+  font-size: 17px;
+  text-align: center;
+  margin-bottom: 8px;
+  color: #185a9d;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.result-msg {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 16px;
+  margin-bottom: 0;
+  text-align: center;
+  letter-spacing: 1px;
+}
+.win { color: #27ae60; }
+.lose { color: #e74c3c; }
+.draw { color: #2980b9; }
+
+.gameover-msg {
+  color: #e74c3c;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 24px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.card.back {
+  background: repeating-linear-gradient(135deg, #b2bec3 0 8px, #e0eafc 8px 16px);
+  color: #888;
+  font-size: 20px;
+  justify-content: center;
+  align-items: center;
+}
