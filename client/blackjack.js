@@ -199,5 +199,12 @@ function resetGame() {
   startGame();
 }
 
+// blackjack.jsの一番下などに追加
+document.getElementById("ruleBtn").onclick = function() {
+  const box = document.getElementById("ruleBox");
+  box.style.display = (box.style.display === "none" ? "block" : "none");
+  this.textContent = (box.style.display === "none" ? "ルール確認" : "ルールを閉じる");
+};
+
 updateMoneyDisplay();
 startGame();

@@ -30,9 +30,13 @@
     </div>
     <div class="action-btns">
       <button id="dealBtn">配る</button>
+    </div>
+    <div class="action-btns">
       <button id="betBtn">ベット</button>
       <button id="callBtn">コール</button>
       <button id="raiseBtn">レイズ</button>
+    </div>
+    <div class="action-btns">
       <button id="checkBtn">チェック</button>
       <button id="foldBtn">フォールド</button>
       <button id="nextBtn">次へ</button>
@@ -40,6 +44,16 @@
     <div id="stage" class="stage-msg"></div>
     <div id="judge" class="result-msg"></div>
     <div id="gameover" class="gameover-msg"></div>
+    <button id="ruleBtn" style="margin-top:18px;">ルール確認</button>
+    <div id="ruleBox" style="display:none; margin-top:10px; background:#f8fafd; border-radius:8px; padding:14px; border:1.5px solid #b2bec3; color:#222; font-size:15px;">
+      <b>ポーカーのルール</b><br>
+        各プレイヤーに2枚ずつ手札を配ります。<br>
+        場に最大5枚の「コミュニティカード」が順に公開されます。<br>
+        各ラウンドごとにベット/コール/レイズ/フォールド/チェックなどのアクションを選びます。<br>
+        手札2枚＋場のカードから最強の5枚で役を作り、役の強さで勝敗を決めます。<br>
+        役の強さは「ロイヤルフラッシュ＞ストレートフラッシュ＞フォーカード＞フルハウス＞フラッシュ＞ストレート＞スリーカード＞ツーペア＞ワンペア＞ハイカード」の順です。<br>
+        途中で全員がフォールドした場合は残った人が勝ちです。<br>
+    </div>
   </div>
   <script src="poker.js"></script>
 </body>

@@ -18,7 +18,21 @@ function drawCards(deck, n) {
   return cards;
 }
 
-function renderCards(containerId, cards) {
+// function renderCards(containerId, cards) {
+//   const suitsClass = { "S": "", "H": "heart", "D": "diamond", "C": "" };
+//   const el = document.getElementById(containerId);
+//   el.innerHTML = "";
+//   cards.forEach(card => {
+//     let suit = card.slice(-1);
+//     let rank = card.slice(0, -1);
+//     let div = document.createElement("div");
+//     div.className = "card " + (suitsClass[suit] || "");
+//     div.textContent = rank + suit;
+//     el.appendChild(div);
+//   });
+// }
+
+function renderCards(containerId, cards, show = true) {
   const suitsClass = { "S": "", "H": "heart", "D": "diamond", "C": "" };
   const el = document.getElementById(containerId);
   el.innerHTML = "";
@@ -26,16 +40,48 @@ function renderCards(containerId, cards) {
     let suit = card.slice(-1);
     let rank = card.slice(0, -1);
     let div = document.createElement("div");
-    div.className = "card " + (suitsClass[suit] || "");
-    div.textContent = rank + suit;
+    if (show) {
+      div.className = "card " + (suitsClass[suit] || "");
+      div.textContent = rank + suit;
+    } else {
+      div.className = "card back";
+      div.textContent = "??"; // トランプ裏面風
+    }
     el.appendChild(div);
   });
 }
 
+
+
+// function updateUI() {
+//   renderCards("playerCards", gameState.playerHand || []);
+//   renderCards("opponentCards", gameState.opponentHand || []);
+//   renderCards("boardCards", gameState.board || []);
+//   document.getElementById("balance").textContent = balance;
+//   document.getElementById("pot").textContent = gameState.pot || 0;
+//   document.getElementById("stage").textContent = {
+//     preflop: "プリフロップ",
+//     flop: "フロップ",
+//     turn: "ターン",
+//     river: "リバー",
+//     showdown: "ショーダウン"
+//   }[gameState.stage] || "";
+//   // ボタン制御
+//   const disableAll = gameState.stage === "showdown" || balance <= 0;
+//   document.querySelectorAll(".action-btns button").forEach(btn => {
+//     btn.disabled = disableAll;
+//   });
+//   document.getElementById("dealBtn").disabled = false;
+//   document.getElementById("nextBtn").disabled = !(["flop", "turn", "river"].includes(gameState.stage));
+// }
+
 function updateUI() {
-  renderCards("playerCards", gameState.playerHand || []);
-  renderCards("opponentCards", gameState.opponentHand || []);
-  renderCards("boardCards", gameState.board || []);
+  renderCards("playerCards", gameState.playerHand || [], true);
+  // 相手のカードはショーダウン以外は裏面
+  const showOpponent = gameState.stage === "showdown";
+  renderCards("opponentCards", gameState.opponentHand || [], showOpponent);
+  renderCards("boardCards", gameState.board || [], true);
+
   document.getElementById("balance").textContent = balance;
   document.getElementById("pot").textContent = gameState.pot || 0;
   document.getElementById("stage").textContent = {
@@ -45,6 +91,7 @@ function updateUI() {
     river: "リバー",
     showdown: "ショーダウン"
   }[gameState.stage] || "";
+
   // ボタン制御
   const disableAll = gameState.stage === "showdown" || balance <= 0;
   document.querySelectorAll(".action-btns button").forEach(btn => {
@@ -53,6 +100,8 @@ function updateUI() {
   document.getElementById("dealBtn").disabled = false;
   document.getElementById("nextBtn").disabled = !(["flop", "turn", "river"].includes(gameState.stage));
 }
+
+
 
 function startNewGame() {
   const deck = createDeck();
@@ -152,5 +201,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("checkBtn").onclick = () => playerAction("check");
   document.getElementById("foldBtn").onclick = () => playerAction("fold");
   document.getElementById("nextBtn").onclick = nextStage;
+  document.getElementById("ruleBtn").onclick = function() {
+    const box = document.getElementById("ruleBox");
+    box.style.display = (box.style.display === "none" ? "block" : "none");
+    this.textContent = (box.style.display === "none" ? "ルール確認" : "ルールを閉じる");
+  };
   startNewGame();
 });
