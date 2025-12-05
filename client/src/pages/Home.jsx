@@ -2,43 +2,56 @@ import React from "react";
 
 export default function Home() {
   return (
-    <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h1>ゲーム選択</h1>
-      <p>プレイしたいゲームを選んでください。</p>
+    <div className="hero">
+      <iframe
+        className="hero-iframe"
+        title="poker-loop"
+        src="https://www.youtube.com/embed/9uZ8CCa0t4Y?autoplay=1&mute=1&controls=0&loop=1&playlist=9uZ8CCa0t4Y&rel=0&modestbranding=1"
+        frameBorder="0"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        aria-hidden="true"
+      />
 
-      <div style={{ display: "flex", gap: 20, marginTop: 20, flexWrap: "wrap" }}>
-        <article style={{
-          flex: "1 1 300px",
-          border: "1px solid #ddd",
-          borderRadius: 8,
-          padding: 20,
-          boxShadow: "0 2px 6px rgba(0,0,0,0.06)"
-        }}>
-          <h2>ポーカー</h2>
-          <p>ブロックチェーン検証用のポーカー（画面は別ページ）。</p>
-          <a href="/poker" style={{ display: "inline-block", marginTop: 12 }}>ポーカーへ</a>
-        </article>
+      <div className="hero-overlay">
+        <main className="main-container">
+          <header className="home-header">
+            <h1 className="page-title" data-text="GAME SELECT">ゲーム選択</h1>
+            <p className="page-sub">下のカードを選んでゲームを開始してください。</p>
+          </header>
 
-        <article style={{
-          flex: "1 1 300px",
-          border: "1px solid #ddd",
-          borderRadius: 8,
-          padding: 20,
-          boxShadow: "0 2px 6px rgba(0,0,0,0.06)"
-        }}>
-          <h2>ブラックジャック</h2>
-          <p>ブラックジャック（画面は別ページ）。</p>
-          <a href="/blackjack" style={{ display: "inline-block", marginTop: 12 }}>ブラックジャックへ</a>
-        </article>
+          <div className="game-grid" role="list">
+            <article className="card" role="listitem" aria-labelledby="poker-title">
+              <div className="card-body">
+                <h2 id="poker-title" className="card-title">
+                  <span className="badge">HOT</span> ポーカー
+                </h2>
+                <p className="card-desc">自分の実力と運を信じよう</p>
+              </div>
+              <div className="card-actions">
+                <a className="card-btn" href="/poker" role="button" aria-label="ポーカーをプレイ">
+                  PLAY POKER
+                </a>
+              </div>
+            </article>
+
+            <article className="card" role="listitem" aria-labelledby="bj-title">
+              <div className="card-body">
+                <h2 id="bj-title" className="card-title">
+                  <span className="badge alt">NEW</span> ブラックジャック
+                </h2>
+                <p className="card-desc">シンプルでテンポの良い対戦。高度な読みあいを制するのは？！</p>
+              </div>
+              <div className="card-actions">
+                <a className="card-btn outline" href="/blackjack" role="button" aria-label="ブラックジャックをプレイ">
+                  PLAY BJ
+                </a>
+              </div>
+            </article>
+          </div>
+
+          <section className="memo" aria-hidden="true">{/* デザイン枠のみ */}</section>
+        </main>
       </div>
-
-      <section style={{ marginTop: 32 }}>
-        <h3>メモ</h3>
-        <ul>
-          <li>ここではゲームの要素は扱いません。各ゲームは /poker や /blackjack に実装する。</li>
-          <li>アプリ内遷移に React Router を使う場合は &lt;Link to="/poker"&gt; 等に置き換える。</li>
-        </ul>
-      </section>
-    </main>
+    </div>
   );
 }
