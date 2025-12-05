@@ -18,19 +18,6 @@ function drawCards(deck, n) {
   return cards;
 }
 
-// function renderCards(containerId, cards) {
-//   const suitsClass = { "S": "", "H": "heart", "D": "diamond", "C": "" };
-//   const el = document.getElementById(containerId);
-//   el.innerHTML = "";
-//   cards.forEach(card => {
-//     let suit = card.slice(-1);
-//     let rank = card.slice(0, -1);
-//     let div = document.createElement("div");
-//     div.className = "card " + (suitsClass[suit] || "");
-//     div.textContent = rank + suit;
-//     el.appendChild(div);
-//   });
-// }
 
 function renderCards(containerId, cards, show = true) {
   const suitsClass = { "S": "", "H": "heart", "D": "diamond", "C": "" };
@@ -50,30 +37,6 @@ function renderCards(containerId, cards, show = true) {
     el.appendChild(div);
   });
 }
-
-
-
-// function updateUI() {
-//   renderCards("playerCards", gameState.playerHand || []);
-//   renderCards("opponentCards", gameState.opponentHand || []);
-//   renderCards("boardCards", gameState.board || []);
-//   document.getElementById("balance").textContent = balance;
-//   document.getElementById("pot").textContent = gameState.pot || 0;
-//   document.getElementById("stage").textContent = {
-//     preflop: "プリフロップ",
-//     flop: "フロップ",
-//     turn: "ターン",
-//     river: "リバー",
-//     showdown: "ショーダウン"
-//   }[gameState.stage] || "";
-//   // ボタン制御
-//   const disableAll = gameState.stage === "showdown" || balance <= 0;
-//   document.querySelectorAll(".action-btns button").forEach(btn => {
-//     btn.disabled = disableAll;
-//   });
-//   document.getElementById("dealBtn").disabled = false;
-//   document.getElementById("nextBtn").disabled = !(["flop", "turn", "river"].includes(gameState.stage));
-// }
 
 function updateUI() {
   renderCards("playerCards", gameState.playerHand || [], true);
