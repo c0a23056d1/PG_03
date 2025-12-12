@@ -1,0 +1,149 @@
+body {
+  font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+  background: radial-gradient(ellipse at center, #388e3c 0%, #145a1f 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  background: rgba(255,255,255,0.92);
+  padding: 28px 32px 32px 32px;
+  border-radius: 18px;
+  width: 420px;
+  box-shadow: 0 8px 32px #0003, 0 1.5px 0 #388e3c inset;
+  margin: 40px 0;
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 2px;
+  color: #185a9d;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.money {
+  font-size: 17px;
+  margin-bottom: 12px;
+  text-align: right;
+  color: #185a9d;
+}
+.money span {
+  font-weight: bold;
+  color: #27ae60;
+}
+input[type="number"] {
+  width: 70px;
+  margin-left: 8px;
+  padding: 7px 8px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1.5px solid #b2bec3;
+  background: #f8fafd;
+  color: #222;
+  transition: border 0.2s;
+}
+input[type="number"]:focus {
+  border: 1.5px solid #2ecc71;
+  outline: none;
+}
+
+
+.label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #185a9d;
+  letter-spacing: 1px;
+}
+
+.cards {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 12px 0;
+}
+.card {
+  background: linear-gradient(135deg, #fff 60%, #e0eafc 100%);
+  border: 2.5px solid #b2bec3;
+  border-radius: 10px;
+  width: 60px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #222;
+  box-shadow: 1px 2px 10px #0003;
+}
+.card.heart, .card.diamond { color: #e74c3c; }
+.card.back {
+  background: repeating-linear-gradient(135deg, #b2bec3 0 12px, #e0eafc 12px 24px);
+  color: #888;
+  font-size: 32px;
+}
+
+
+
+button {
+  padding: 14px 0;
+  font-size: 18px;
+  background: linear-gradient(90deg, #ffb347 0%, #ffcc33 100%);
+  color: #222;
+  border: 2px solid #b8860b;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px #b8860b33;
+  min-width: 110px;
+  margin: 0 6px 10px 0;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+button:disabled {
+  background: #b2bec3;
+  color: #fff;
+  box-shadow: none;
+}
+#hitBtn, #standBtn, #restartBtn, #resetBtn {
+  display: inline-block;
+}
+
+.result-msg {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 16px;
+  margin-bottom: 0;
+  text-align: center;
+  letter-spacing: 1px;
+}
+.win { color: #27ae60; }
+.lose { color: #e74c3c; }
+.draw { color: #2980b9; }
+.burst { color: #f39c12; }
+
+.gameover-msg {
+  color: #e74c3c;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 24px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+pre {
+  background: #222;
+  color: #0f0;
+  padding: 12px;
+  margin-top: 18px;
+  font-size: 15px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
