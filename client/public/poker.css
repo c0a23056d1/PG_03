@@ -15,6 +15,14 @@ body {
   overflow: hidden;
 }
 
+.bet-info {
+  color: #fff;
+  font-size: 1em;
+  margin-top: 2px;
+  text-shadow: 1px 1px 4px #185a9d;
+  display: block;
+}
+
 .player {
   position: absolute;
   display: flex;
