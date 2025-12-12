@@ -1,5 +1,3 @@
-
-
 import express from "express";
 import pkg from "pokersolver";
 const { Hand } = pkg;
@@ -40,7 +38,6 @@ router.post("/result", (req, res) => {
     });
   }
 
-  // 他アクションは現状ベットと同じ扱い（拡張可能）
   // 重複チェック
   const allCards = [...board];
   players.forEach(p => allCards.push(...p.hand));
@@ -55,19 +52,20 @@ router.post("/result", (req, res) => {
   // 役判定
   const hands = players.map(p => Hand.solve([...(p.hand || []), ...(board || [])]));
   const winners = Hand.winners(hands);
+  const winnerIndexes = hands.map((h, i) => winners.includes(h) ? i : -1).filter(i => i !== -1);
+  const winnerNames = winnerIndexes.map(i => players[i].name);
 
+  // 勝敗判定
   if (winners.length > 1) {
     result = "draw";
-    message = `引き分けです（${hands[0].descr} vs ${hands[1].descr}）`;
+    message = `引き分けです（${winnerNames.join("・")}）`;
   } else {
-    const winnerIdx = hands.findIndex(h => h === winners[0]);
-    if (winnerIdx === 0) {
-      result = "win";
-      message = `あなたの勝ち！（${hands[0].descr}）`;
+    result = "win";
+    message = `${winnerNames[0]}が勝利！（${winners[0].descr}）`;
+    // あなたが勝者なら残高増、そうでなければ減
+    if (winnerNames.includes("あなた")) {
       newBalance += bet;
     } else {
-      result = "lose";
-      message = `あなたの負け…（${hands[1].descr}）`;
       newBalance -= bet;
     }
   }
@@ -75,6 +73,7 @@ router.post("/result", (req, res) => {
   res.json({
     result,
     message,
+    winnerNames,
     balance: newBalance,
     players: players.map((p, i) => ({
       name: p.name,
