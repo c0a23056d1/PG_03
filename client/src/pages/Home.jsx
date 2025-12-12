@@ -28,9 +28,13 @@ export default function Home() {
                 <p className="card-desc">自分の実力と運を信じよう</p>
               </div>
               <div className="card-actions">
-                <a className="card-btn" href="/poker" role="button" aria-label="ポーカーをプレイ">
+                <button 
+                  className="card-btn" 
+                  onClick={() => window.location.href = "/poker.html"}
+                  aria-label="ポーカーをプレイ"
+                >
                   PLAY POKER
-                </a>
+                </button>
               </div>
             </article>
 
@@ -42,9 +46,13 @@ export default function Home() {
                 <p className="card-desc">シンプルでテンポの良い対戦。高度な読みあいを制するのは？！</p>
               </div>
               <div className="card-actions">
-                <a className="card-btn outline" href="test_blackjack.html" role="button" aria-label="ブラックジャックをプレイ">
+                <button 
+                  className="card-btn outline" 
+                  onClick={() => window.location.href = "/blackjack.html"}
+                  aria-label="ブラックジャックをプレイ"
+                >
                   PLAY BJ
-                </a>
+                </button>
               </div>
             </article>
           </div>
