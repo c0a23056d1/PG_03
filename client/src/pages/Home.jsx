@@ -42,7 +42,7 @@ export default function Home() {
                 <p className="card-desc">シンプルでテンポの良い対戦。高度な読みあいを制するのは？！</p>
               </div>
               <div className="card-actions">
-                <a className="card-btn outline" href="/blackjack" role="button" aria-label="ブラックジャックをプレイ">
+                <a className="card-btn outline" href="test_blackjack.html" role="button" aria-label="ブラックジャックをプレイ">
                   PLAY BJ
                 </a>
               </div>
