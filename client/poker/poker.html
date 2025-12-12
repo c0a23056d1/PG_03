@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -62,6 +62,76 @@
         役の強さは「ロイヤルフラッシュ＞ストレートフラッシュ＞フォーカード＞フルハウス＞フラッシュ＞ストレート＞スリーカード＞ツーペア＞ワンペア＞ハイカード」の順です。<br>
         途中で全員がフォールドした場合は残った人が勝ちです。<br>
     </div>
+  </div>
+  <script src="poker.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ポーカー</title>
+  <link rel="stylesheet" href="poker.css">
+</head>
+<body>
+  <div class="table-bg">
+    <!-- 上（相手A） -->
+    <div class="player player-top">
+      <div class="player-label">相手A</div>
+      <div id="player2Cards" class="cards"></div>
+    </div>
+    <!-- 右（相手B） -->
+    <div class="player player-right">
+      <div class="player-label">相手B</div>
+      <div id="player3Cards" class="cards"></div>
+    </div>
+    <!-- 左（相手C） -->
+    <div class="player player-left">
+      <div class="player-label">相手C</div>
+      <div id="player4Cards" class="cards"></div>
+    </div>
+    <!-- 下（あなた） -->
+    <div class="player player-bottom">
+      <div class="player-label">あなた</div>
+      <div id="player1Cards" class="cards"></div>
+    </div>
+    <!-- 中央ボード -->
+    <div class="board-center">
+      <div id="boardCards" class="cards"></div>
+      <div class="pot-info">ポット: <span id="pot">0</span></div>
+    </div>
+    <!-- 所持金・ベット -->
+    <div class="money-bar">
+      所持金: <span id="balance">1000</span>
+      ベット: <input id="bet" type="number" value="100" min="1">
+    </div>
+    <!-- アクションボタン -->
+    <div class="action-btns">
+      <button id="dealBtn">配る</button>
+      <button id="betBtn">ベット</button>
+      <button id="callBtn">コール</button>
+      <button id="raiseBtn">レイズ</button>
+      <button id="checkBtn">チェック</button>
+      <button id="foldBtn">フォールド</button>
+      <button id="nextBtn">次へ</button>
+    </div>
+    <div id="stage" class="stage-msg"></div>
+    <div id="judge" class="result-msg"></div>
+    <div id="gameover" class="gameover-msg"></div>
+    <button id="ruleBtn" class="rule-btn">ルール確認</button>
+    <div id="ruleBox" class="rule-box" style="display:none;">
+      <b>ポーカーのルール</b><br>
+      各プレイヤーに2枚ずつ手札を配ります。<br>
+      場に最大5枚の「コミュニティカード」が順に公開されます。<br>
+      各ラウンドごとにベット/コール/レイズ/フォールド/チェックなどのアクションを選びます。<br>
+      手札2枚＋場のカードから最強の5枚で役を作り、役の強さで勝敗を決めます。<br>
+      役の強さは「ロイヤルフラッシュ＞ストレートフラッシュ＞フォーカード＞フルハウス＞フラッシュ＞ストレート＞スリーカード＞ツーペア＞ワンペア＞ハイカード」の順です。<br>
+      途中で全員がフォールドした場合は残った人が勝ちです。<br>
+    </div>
+    <button id="restartBtn" style="display:none; position:absolute; left:50%; bottom:60px; transform:translateX(-50%); z-index:2;">
+      再スタート
+    </button>
   </div>
   <script src="poker.js"></script>
 </body>
