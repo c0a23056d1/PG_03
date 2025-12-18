@@ -316,6 +316,17 @@ function updateUI() {
   }
   renderCards("boardCards", gameState.board || [], true);
 
+  // ベットボタンの表示制御
+  const betBtn = document.getElementById("betBtn");
+  if (betBtn) {
+    // 自分が最初の順番の時だけ表示
+    if (gameState.stage === "preflop" && gameState.roundActions === 0 && gameState.currentTurn === 0) {
+      betBtn.style.display = "inline-block";
+    } else {
+      betBtn.style.display = "none";
+    }
+  }
+
   // 進行状況（プリフロップなど）
   document.getElementById("stage").textContent = {
     preflop: "プリフロップ",
@@ -352,6 +363,11 @@ function updateUI() {
     document.getElementById("restartBtn").style.display = "none";
   }
 }
+
+document.getElementById("betBtn").onclick = () => {
+  playerAction("bet");
+  document.getElementById("betBtn").style.display = "none";
+};
 
 function nextTurn() {
   if (gameState.stage === "showdown") return;
@@ -487,8 +503,9 @@ function sendShowdown(action = "bet") {
   .then(res => res.json())
   .then(json => {
     document.getElementById("judge").textContent = json.message;
-    if (json.result === "win") balance = json.balance;
-    if (json.result === "lose") balance = json.balance;
+    if (json.result === "win") balance += gameState.pot;
+    // if (json.result === "win") balance = json.balance;
+    // if (json.result === "lose") balance = json.balance;
     updateUI();
     if (balance > 0) {
       document.getElementById("nextBtn").disabled = false;
@@ -496,6 +513,8 @@ function sendShowdown(action = "bet") {
     if (balance <= 0) {
       document.getElementById("gameover").textContent = "お金がなくなりました。";
     }
+
+    gameState.pot = 0;
   });
 }
 
