@@ -1,6 +1,8 @@
 
-let balance = 1000;
+let balance = 5000;
 let gameState = {};
+let startBtn = null;
+let raiseInput = null;
 
 function createDeck() {
   const suits = ["♠", "♥", "♦", "♣"];
@@ -93,17 +95,22 @@ function startNewGame() {
     board: [],
     currentTurn,
     actionLog: [`${players[currentTurn].name}の番です`],
-    roundActions: 0
+    roundActions: 0,
+    lastBet: 0 // 直前のベット額
   };
   document.getElementById("judge").textContent = "";
   document.getElementById("gameover").textContent = "";
   document.getElementById("dealBtn").disabled = true;
   document.getElementById("restartBtn").style.display = "none";
+  if (startBtn) startBtn.style.display = "none";
+  if (raiseInput) raiseInput.style.display = "none";
   updateUI();
   handleTurn();
 }
 
 function handleTurn() {
+  if (gameState.stage === "showdown") return;
+
   const turn = gameState.currentTurn;
   const player = gameState.players[turn];
   if (player.folded || player.acted) {
@@ -119,25 +126,33 @@ function handleTurn() {
         btn.disabled = false;
       }
     });
+    // レイズ入力欄を非表示
+    if (raiseInput) raiseInput.style.display = "none";
   } else {
     setTimeout(() => {
+      if (gameState.stage === "showdown") return;
+
       let action = "call";
-      let bet = getAutoBetAmount(player.hand);
+      // 直前のベット額
+      let lastBet = gameState.lastBet || 100;
       if (Math.random() < 0.1) {
         action = "fold";
         player.folded = true;
         gameState.actionLog.push(`${player.name}はフォールドしました`);
       } else if (Math.random() < 0.2) {
         action = "raise";
-        bet += 50;
-        player.bet += bet;
-        gameState.pot += bet;
-        gameState.actionLog.push(`${player.name}が${bet}円レイズしました`);
+        // レイズは前のベット+50円
+        let raiseAmount = lastBet + 50;
+        player.bet += raiseAmount;
+        gameState.pot += raiseAmount;
+        gameState.lastBet = raiseAmount;
+        gameState.actionLog.push(`${player.name}が${raiseAmount}円レイズしました`);
       } else {
         action = "call";
-        player.bet += bet;
-        gameState.pot += bet;
-        gameState.actionLog.push(`${player.name}が${bet}円コールしました`);
+        // コールは直前のベット額に合わせる
+        player.bet += lastBet;
+        gameState.pot += lastBet;
+        gameState.actionLog.push(`${player.name}が${lastBet}円コールしました`);
       }
       player.acted = true;
       gameState.roundActions++;
@@ -176,7 +191,18 @@ function handleTurn() {
 // }
 
 function playerAction(action) {
-  const bet = Number(document.getElementById("bet").value);
+  let bet = Number(document.getElementById("bet").value);
+  if (action === "raise") {
+    // レイズ時はraiseInputの値を加算
+    if (raiseInput) {
+      const plus = Number(raiseInput.value);
+      if (isNaN(plus) || plus < 1) {
+        alert("レイズ額を正しく入力してください");
+        return;
+      }
+      bet = (gameState.lastBet || 100) + plus;
+    }
+  }
   if (["bet", "raise"].includes(action)) {
     if (bet < 1 || bet > balance) {
       alert("ベット額が不正です");
@@ -186,14 +212,17 @@ function playerAction(action) {
     gameState.playerBet = (gameState.playerBet || 0) + bet;
     balance -= bet;
     gameState.players[0].bet += bet;
+    gameState.lastBet = bet;
     gameState.actionLog.push(`あなたが${bet}円${action === "bet" ? "ベット" : "レイズ"}しました`);
   }
   if (action === "call") {
-    let callBet = 100; // 仮のコール額
-    gameState.pot += callBet;
-    balance -= callBet;
-    gameState.players[0].bet += callBet;
-    gameState.actionLog.push("あなたがコールしました");
+    // コールは直前のベット額に合わせる
+    let callAmount = gameState.lastBet || 100;
+    if (callAmount > balance) callAmount = balance;
+    gameState.pot += callAmount;
+    balance -= callAmount;
+    gameState.players[0].bet += callAmount;
+    gameState.actionLog.push(`あなたが${callAmount}円コールしました`);
   }
   if (action === "check") {
     gameState.actionLog.push("あなたがチェックしました");
@@ -205,11 +234,13 @@ function playerAction(action) {
     sendShowdown("fold");
     document.getElementById("restartBtn").style.display = "inline-block";
     updateUI();
+    if (raiseInput) raiseInput.style.display = "none";
     return;
   }
   gameState.players[0].acted = true;
   gameState.roundActions++;
   updateUI();
+  if (raiseInput) raiseInput.style.display = "none";
   nextTurn();
 }
 
@@ -323,6 +354,8 @@ function updateUI() {
 }
 
 function nextTurn() {
+  if (gameState.stage === "showdown") return;
+
   // 全員アクション済み or フォールドで残り1人なら次のラウンドへ
   const alive = gameState.players.filter(p => !p.folded);
   if (alive.length === 1) {
@@ -338,21 +371,29 @@ function nextTurn() {
     // 各プレイヤーのactedをリセット
     gameState.players.forEach(p => p.acted = false);
     gameState.roundActions = 0;
-    // 新しいラウンドの最初のプレイヤーを決定
-    gameState.currentTurn = gameState.players.findIndex(p => !p.folded);
+    // 新しいラウンドの最初のプレイヤーを決定（前回の最初の人の次から）
+    let next = gameState.currentTurn;
+    do {
+      next = (next + 1) % 4;
+    } while (gameState.players[next].folded);
+    gameState.currentTurn = next;
     gameState.actionLog.push(`${gameState.players[gameState.currentTurn].name}の番です`);
     updateUI();
+    if (gameState.stage === "showdown") return;
+
     handleTurn();
     return;
   }
-  // 次のプレイヤーへ
-  let next = (gameState.currentTurn + 1) % 4;
-  while (gameState.players[next].folded || gameState.players[next].acted) {
+  // 次のプレイヤーへ（時計回り）
+  let next = gameState.currentTurn;
+  do {
     next = (next + 1) % 4;
-  }
+  } while (gameState.players[next].folded || gameState.players[next].acted);
   gameState.currentTurn = next;
   gameState.actionLog.push(`${gameState.players[next].name}の番です`);
   updateUI();
+  if (gameState.stage === "showdown") return;
+
   handleTurn();
 }
 
@@ -360,25 +401,65 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("dealBtn").style.display = "none";
   // スタートボタンを追加
   if (!document.getElementById("startBtn")) {
-    const btn = document.createElement("button");
-    btn.id = "startBtn";
-    btn.textContent = "スタート";
-    btn.style.position = "absolute";
-    btn.style.left = "50%";
-    btn.style.top = "40px";
-    btn.style.transform = "translateX(-50%)";
-    btn.style.zIndex = "1000";
-    btn.onclick = startNewGame;
-    document.querySelector(".table-bg").appendChild(btn);
+    startBtn = document.createElement("button");
+    startBtn.id = "startBtn";
+    startBtn.textContent = "スタート";
+    startBtn.style.position = "absolute";
+    startBtn.style.left = "50%";
+    startBtn.style.top = "40px";
+    startBtn.style.transform = "translateX(-50%)";
+    startBtn.style.zIndex = "1000";
+    startBtn.style.padding = "18px 60px";
+    startBtn.style.fontSize = "1.5em";
+    startBtn.style.background = "linear-gradient(90deg, #43cea2 0%, #185a9d 100%)";
+    startBtn.style.color = "#fff";
+    startBtn.style.border = "none";
+    startBtn.style.borderRadius = "14px";
+    startBtn.style.boxShadow = "0 4px 16px #185a9d44";
+    startBtn.style.fontWeight = "bold";
+    startBtn.style.letterSpacing = "2px";
+    startBtn.style.cursor = "pointer";
+    startBtn.onmouseover = () => startBtn.style.background = "linear-gradient(90deg, #185a9d 0%, #43cea2 100%)";
+    startBtn.onmouseout = () => startBtn.style.background = "linear-gradient(90deg, #43cea2 0%, #185a9d 100%)";
+    startBtn.onclick = startNewGame;
+    document.querySelector(".table-bg").appendChild(startBtn);
+  } else {
+    startBtn = document.getElementById("startBtn");
   }
+
+  // レイズ入力欄を追加
+  if (!document.getElementById("raiseInput")) {
+    raiseInput = document.createElement("input");
+    raiseInput.type = "number";
+    raiseInput.id = "raiseInput";
+    raiseInput.min = "1";
+    raiseInput.value = "50";
+    raiseInput.placeholder = "レイズ追加額";
+    raiseInput.style.position = "absolute";
+    raiseInput.style.left = "50%";
+    raiseInput.style.bottom = "60px";
+    raiseInput.style.transform = "translateX(-50%)";
+    raiseInput.style.zIndex = "1001";
+    raiseInput.style.display = "none";
+    document.querySelector(".table-bg").appendChild(raiseInput);
+  } else {
+    raiseInput = document.getElementById("raiseInput");
+  }
+
   document.getElementById("betBtn").onclick = () => playerAction("bet");
-  document.getElementById("raiseBtn").onclick = () => playerAction("raise");
+  document.getElementById("raiseBtn").onclick = () => {
+    if (raiseInput) {
+      raiseInput.style.display = "inline-block";
+      raiseInput.focus();
+    }
+  };
   document.getElementById("callBtn").onclick = () => playerAction("call");
   document.getElementById("checkBtn").onclick = () => playerAction("check");
   document.getElementById("foldBtn").onclick = () => playerAction("fold");
   document.getElementById("nextBtn").onclick = startNewGame;
   document.getElementById("restartBtn").onclick = function() {
     balance = 1000;
+    if (startBtn) startBtn.style.display = "inline-block";
     startNewGame();
   };
   document.getElementById("ruleBtn").onclick = function() {
@@ -427,7 +508,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("foldBtn").onclick = () => playerAction("fold");
   document.getElementById("nextBtn").onclick = startNewGame;
   document.getElementById("restartBtn").onclick = function() {
-    balance = 1000;
+    balance = 5000;
     startNewGame();
   };
   document.getElementById("ruleBtn").onclick = function() {
