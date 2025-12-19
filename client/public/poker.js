@@ -48,33 +48,6 @@ function getAutoBetAmount(hand) {
   return 100;
 }
 
-// function startNewGame() {
-//   const deck = createDeck();
-//   // 4人分の手札
-//   const players = [
-//     { name: "あなた", hand: drawCards(deck, 2), bet: 0 },
-//     { name: "相手A", hand: drawCards(deck, 2), bet: 100 },
-//     { name: "相手B", hand: drawCards(deck, 2), bet: 100 },
-//     { name: "相手C", hand: drawCards(deck, 2), bet: 100 }
-//   ];
-//   const allBoard = drawCards(deck, 5);
-//   // プリフロップ時点で他プレイヤーのベットをpotに加算
-//   let pot = players[1].bet + players[2].bet + players[3].bet;
-//   gameState = {
-//     stage: "preflop",
-//     turn: "player",
-//     pot: pot,
-//     playerBet: 0,
-//     players,
-//     allBoard,
-//     board: [],
-//   };
-//   document.getElementById("judge").textContent = "";
-//   document.getElementById("gameover").textContent = "";
-//   document.getElementById("dealBtn").disabled = true; // 配るボタンは1回だけ
-//   updateUI();
-// }
-
 function startNewGame() {
   const deck = createDeck();
   const players = [
@@ -162,33 +135,6 @@ function handleTurn() {
   }
 }
 
-// function playerAction(action) {
-//   const bet = Number(document.getElementById("bet").value);
-//   if (["bet", "raise"].includes(action)) {
-//     if (bet < 1 || bet > balance) {
-//       alert("ベット額が不正です");
-//       return;
-//     }
-//     gameState.pot += bet;
-//     gameState.playerBet = (gameState.playerBet || 0) + bet;
-//     balance -= bet;
-//     gameState.players[0].bet = bet; // 自分のベット額
-//   }
-//   if (action === "fold") {
-//     gameState.stage = "showdown";
-//     sendShowdown("fold");
-//     return;
-//   }
-//   // 他プレイヤーは手札でベット額を決定
-//   if (["bet", "raise"].includes(action)) {
-//     for (let i = 1; i < 4; i++) {
-//       const autoBet = getAutoBetAmount(gameState.players[i].hand);
-//       gameState.pot += autoBet;
-//       gameState.players[i].bet = autoBet;
-//     }
-//   }
-//   nextStage();
-// }
 
 function playerAction(action) {
   let bet = Number(document.getElementById("bet").value);
@@ -241,6 +187,7 @@ function playerAction(action) {
   gameState.roundActions++;
   updateUI();
   if (raiseInput) raiseInput.style.display = "none";
+  if (raiseConfirmBtn) raiseConfirmBtn.style.display = "none";
   nextTurn();
 }
 
@@ -262,49 +209,6 @@ function nextStage() {
   updateUI();
 }
 
-// function updateUI() {
-//   // 4人分の手札を表示
-//   for (let i = 0; i < 4; i++) {
-//     const show = (i === 0) || (gameState.stage === "showdown");
-//     renderCards(`player${i+1}Cards`, (gameState.players && gameState.players[i]?.hand) || [], show);
-//     const bet = (gameState.players && gameState.players[i]?.bet) ? gameState.players[i].bet : 0;
-//     document.getElementById(`player${i+1}Bet`).textContent = `ベット額：${bet}`;
-//   }
-//   renderCards("boardCards", gameState.board || [], true);
-//   document.getElementById("stage").textContent = gameState.actionLog.slice(-3).join(" / ");
-
-//   document.getElementById("balance").textContent = balance;
-//   document.getElementById("pot").textContent = gameState.pot || 0;
-//   document.getElementById("stage").textContent = {
-//     preflop: "プリフロップ",
-//     flop: "フロップ",
-//     turn: "ターン",
-//     river: "リバー",
-//     showdown: "ショーダウン"
-//   }[gameState.stage] || "";
-
-//   // ボタン制御
-//   // 配るボタンは1回だけ
-//   document.getElementById("dealBtn").disabled = true;
-//   // 「次へ」ボタンはショーダウン後のみ有効
-//   document.getElementById("nextBtn").disabled = !(gameState.stage === "showdown" && balance > 0);
-
-//   // アクションボタンはショーダウン時と残高0円時は無効
-//   const disableAll = gameState.stage === "showdown" || balance <= 0;
-//   document.querySelectorAll(".action-btns button").forEach(btn => {
-//     if (btn.id !== "nextBtn" && btn.id !== "dealBtn") {
-//       btn.disabled = disableAll;
-//     }
-//   });
-
-//   if (balance <= 0) {
-//     document.getElementById("gameover").textContent = "お金がなくなりました。";
-//     document.getElementById("restartBtn").style.display = "inline-block";
-//   } else {
-//     document.getElementById("gameover").textContent = "";
-//     document.getElementById("restartBtn").style.display = "none";
-//   }
-// }
 
 function updateUI() {
   // 4人分の手札を表示
@@ -413,6 +317,8 @@ function nextTurn() {
   handleTurn();
 }
 
+let raiseConfirmBtn = null;
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("dealBtn").style.display = "none";
   // スタートボタンを追加
@@ -443,32 +349,41 @@ document.addEventListener("DOMContentLoaded", () => {
     startBtn = document.getElementById("startBtn");
   }
 
-  // レイズ入力欄を追加
-  if (!document.getElementById("raiseInput")) {
-    raiseInput = document.createElement("input");
-    raiseInput.type = "number";
-    raiseInput.id = "raiseInput";
-    raiseInput.min = "1";
-    raiseInput.value = "50";
-    raiseInput.placeholder = "レイズ追加額";
-    raiseInput.style.position = "absolute";
-    raiseInput.style.left = "50%";
-    raiseInput.style.bottom = "60px";
-    raiseInput.style.transform = "translateX(-50%)";
-    raiseInput.style.zIndex = "1001";
-    raiseInput.style.display = "none";
-    document.querySelector(".table-bg").appendChild(raiseInput);
+
+  if (!document.getElementById("raiseConfirmBtn")) {
+    raiseConfirmBtn = document.createElement("button");
+    raiseConfirmBtn.id = "raiseConfirmBtn";
+    raiseConfirmBtn.textContent = "レイズ決定";
+    raiseConfirmBtn.style.position = "absolute";
+    raiseConfirmBtn.style.left = "60%";
+    raiseConfirmBtn.style.bottom = "60px";
+    raiseConfirmBtn.style.transform = "translateX(-50%)";
+    raiseConfirmBtn.style.zIndex = "1001";
+    raiseConfirmBtn.style.display = "none";
+    raiseConfirmBtn.onclick = () => playerAction("raise");
+    document.querySelector(".table-bg").appendChild(raiseConfirmBtn);
   } else {
-    raiseInput = document.getElementById("raiseInput");
+    raiseConfirmBtn = document.getElementById("raiseConfirmBtn");
   }
 
   document.getElementById("betBtn").onclick = () => playerAction("bet");
+  // document.getElementById("raiseBtn").onclick = () => {
+  //   if (raiseInput) {
+  //     raiseInput.style.display = "inline-block";
+  //     raiseInput.focus();
+  //   }
+  // };
+
   document.getElementById("raiseBtn").onclick = () => {
     if (raiseInput) {
       raiseInput.style.display = "inline-block";
       raiseInput.focus();
     }
+    if (raiseConfirmBtn) {
+      raiseConfirmBtn.style.display = "inline-block";
+    }
   };
+
   document.getElementById("callBtn").onclick = () => playerAction("call");
   document.getElementById("checkBtn").onclick = () => playerAction("check");
   document.getElementById("foldBtn").onclick = () => playerAction("fold");
