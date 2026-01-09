@@ -61,6 +61,19 @@ function startGame() {
   document.getElementById("gameover").textContent = "";
   document.getElementById("resetBtn").style.display = "none";
   document.getElementById("apiResult").style.display = "none";
+  
+  // ブロックチェーン初期化呼び出し
+  fetch("http://localhost:3001/api/blackjack/start", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ playerAddress: "0x0" })
+  })
+  .then(res => res.json())
+  .then(json => {
+    console.log("ブロックチェーン初期化:", json);
+  })
+  .catch(err => console.error("ブロックチェーン初期化エラー:", err));
+  
   if (balance <= 0) {
     document.getElementById("hitBtn").disabled = true;
     document.getElementById("standBtn").disabled = true;
